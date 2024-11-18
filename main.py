@@ -41,11 +41,7 @@ st.markdown("<h1 style='font-size: 50px;'>Análisis del Empleado</h1>", unsafe_a
 # Creación de pestañas
 tab1, tab2, tab3 = st.tabs(["Visualización EDA", "Modelo de Predicción", "Modelo de Clasificación"])
 
-'''
-# URLs de los modelos en Google Drive
-url_modelprediccion = "https://drive.google.com/file/d/1HcdA69bo2Px8VB6divzKa_SVhqS-2mzn"
-url_modelclasificacion = "https://drive.google.com/file/d/1BJAa4C4L_DLKorh3xOxGUL31c6J210Dd"
-'''
+
 # URLs de los modelos en Google Drive (usando el formato adecuado para gdown)
 url_modelprediccion = "https://drive.google.com/uc?id=1HcdA69bo2Px8VB6divzKa_SVhqS-2mzn"
 url_modelclasificacion = "https://drive.google.com/uc?id=1BJAa4C4L_DLKorh3xOxGUL31c6J210Dd"
@@ -77,28 +73,6 @@ descargar_modelo(url_modelclasificacion, os.path.join(modelos_dir, "modelclasifi
 model2 = None
 model1 = None
 
-'''
-# Cargar los modelos con pickle solo si se descargaron correctamente
-try:
-    with open(os.path.join(modelos_dir, "modelprediccion.pkl"), "rb") as file1:
-        model2 = pickle.load(file1)
-    print("Modelo de predicción cargado exitosamente.")
-except Exception as e:
-    print(f"Error al cargar el modelo de predicción: {e}")
-
-try:
-    with open(os.path.join(modelos_dir, "modelclasificacion.pkl"), "rb") as file:
-        model1 = pickle.load(file)
-    print("Modelo de clasificación cargado exitosamente.")
-except Exception as e:
-    print(f"Error al cargar el modelo de clasificación: {e}")
-
-# Verificar que los modelos están cargados antes de continuar
-if model2 is not None and model1 is not None:
-    print("Modelos cargados exitosamente. Continuando con el procesamiento...")
-else:
-    print("Error: No se pudieron cargar los modelos. El código no continuará.")
-'''
 
 with open('modelos/modelprediccion.pkl', 'rb') as file1:
     model2 = pickle.load(file1)
@@ -112,6 +86,11 @@ df = pd.read_csv("modelos/archivo_combinado.csv")
 # Contenido de la pestaña 1: Visualización EDA
 with tab1:
     C_visualizacion(df)
+    '''
+    # URLs de los modelos en Google Drive
+    url_modelprediccion = "https://drive.google.com/file/d/1HcdA69bo2Px8VB6divzKa_SVhqS-2mzn"
+    url_modelclasificacion = "https://drive.google.com/file/d/1BJAa4C4L_DLKorh3xOxGUL31c6J210Dd"
+    '''
 
 # Contenido de la pestaña 2: Modelo de Predicción
 with tab2:
