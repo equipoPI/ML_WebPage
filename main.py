@@ -81,6 +81,11 @@ def limpiar_estado_tab_actual(tab_seleccionado):
 with tab1:
     limpiar_estado_tab_actual("Visualización EDA")  # Limpiar las otras pestañas al entrar a esta
     C_visualizacion(df)
+    '''
+    # URLs de los modelos en Google Drive
+    url_modelprediccion = "https://drive.google.com/file/d/1HcdA69bo2Px8VB6divzKa_SVhqS-2mzn"
+    url_modelclasificacion = "https://drive.google.com/file/d/1BJAa4C4L_DLKorh3xOxGUL31c6J210Dd"
+    '''
 
 # Contenido de la pestaña 2: Modelo de Predicción
 with tab2:
