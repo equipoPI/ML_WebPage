@@ -80,6 +80,9 @@ def C_clasificacion(model1):
         'Permanece': 0, 'Deserción': 1
     }
 
+    # Crear un formulario para la entrada de datos del usuario
+    input_data = {}
+
     # Usar columnas para organizar los selectbox en 3 columnas
     col1, col2, col3, col4 = st.columns(4)
 
@@ -107,8 +110,7 @@ def C_clasificacion(model1):
 
     with col1:
 
-        # Crear un formulario para la entrada de datos del usuario
-        input_data = {}
+
         edad_label = st.number_input("Ingrese el valor de Edad", min_value=18, max_value=60, value=18, key='numero21')
         antiguedad_label = st.number_input("Ingrese el valor de Antigüedad en la Empresa", min_value=0, max_value=43, value=0, key='numero22')
         ingreso_label = st.number_input("Ingrese el valor del Ingreso Mensual", min_value=1009, max_value=19999, value=1009, key='numero23')

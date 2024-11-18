@@ -83,6 +83,9 @@ def C_prediccion(model2):
         'Permanece': 0, 'Deserción': 1
     }
 
+    # Crear un formulario para la entrada de datos del usuario
+    input1_data = {}
+
     # Creando 4 columnas
     col1, col2, col3, col4 = st.columns(4)
 
@@ -109,8 +112,7 @@ def C_prediccion(model2):
         desercion_label1 = st.selectbox("Seleccione estado de Deserción", options=list(desercion_options1.keys()), key='desercion2')
 
     with col3:
-        # Crear un formulario para la entrada de datos del usuario
-        input1_data = {}
+
         edad_label1 = st.number_input("Ingrese el valor de Edad", min_value=18, max_value=60, value=18, key='numero11')
         antiguedad_label1 = st.number_input("Ingrese el valor de Antigüedad en la Empresa", min_value=0, max_value=43, value=0, key='numero12')
         promociones_label1 = st.number_input("Ingrese el valor de Número de Promociones", min_value=0, max_value=4, value=0, key='numero13')

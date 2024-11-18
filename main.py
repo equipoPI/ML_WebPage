@@ -1,19 +1,11 @@
-#librerias
+# Librerías
 import streamlit as st
 import pandas as pd
 import pickle
-import numpy as np
-import plotly.express as px
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
-import seaborn as sns
 import os
 import gdown
-import requests
-from sklearn.preprocessing import MinMaxScaler
-from scipy import interpolate
 
-#componentes
+# Componentes
 from componentes.componente_prediccion import C_prediccion
 from componentes.componente_clasificacion import C_clasificacion
 from componentes.componente_eda import C_visualizacion
@@ -22,30 +14,25 @@ from componentes.componente_eda import C_visualizacion
 st.set_page_config(page_title="Análisis y Predicción de Empleados", layout="wide")
 
 # Usar HTML para personalizar el tamaño del texto
-# Usar HTML para mostrar el logo con borde circular y el texto al lado, con fuente Georgia en 80px
-# Usar HTML para mostrar solo el texto "equipoPI" con fuente Georgia en 80px
 st.markdown("""
     <style>
         .custom-font {
             font-family: 'Georgia', serif;
-            font-size: 100px;  /* Tamaño de fuente 80px */
+            font-size: 100px;  /* Tamaño de fuente 100px */
             color: #FF6347;  /* Cambia el color a tu gusto */
         }
     </style>
     <h1 class="custom-font">equipoPI</h1>
 """, unsafe_allow_html=True)
 
-
 st.markdown("<h1 style='font-size: 50px;'>Análisis del Empleado</h1>", unsafe_allow_html=True)
 
 # Creación de pestañas
 tab1, tab2, tab3 = st.tabs(["Visualización EDA", "Modelo de Predicción", "Modelo de Clasificación"])
 
-
 # URLs de los modelos en Google Drive (usando el formato adecuado para gdown)
 url_modelprediccion = "https://drive.google.com/uc?id=1HcdA69bo2Px8VB6divzKa_SVhqS-2mzn"
 url_modelclasificacion = "https://drive.google.com/uc?id=1BJAa4C4L_DLKorh3xOxGUL31c6J210Dd"
-
 
 # Directorio donde se guardarán los modelos
 modelos_dir = "modelos"
@@ -64,23 +51,21 @@ def descargar_modelo(url, path):
     else:
         print(f"El archivo {os.path.basename(path)} ya existe.")
 
-# Descargar los modelos y asegurar que se complete antes de continuar
-
+# Descargar los modelos solo si no existen
 descargar_modelo(url_modelprediccion, os.path.join(modelos_dir, "modelprediccion.pkl"))
 descargar_modelo(url_modelclasificacion, os.path.join(modelos_dir, "modelclasificacion.pkl"))
 
-# Inicializar los modelos como None
-model2 = None
-model1 = None
+# Función para cargar los modelos en caché usando st.cache_resource
+@st.cache_resource
+def cargar_modelo(path):
+    with open(path, 'rb') as file:
+        return pickle.load(file)
 
+# Cargar los modelos (se cargan solo una vez)
+model2 = cargar_modelo(os.path.join(modelos_dir, "modelprediccion.pkl"))
+model1 = cargar_modelo(os.path.join(modelos_dir, "modelclasificacion.pkl"))
 
-with open('modelos/modelprediccion.pkl', 'rb') as file1:
-    model2 = pickle.load(file1)
-
-with open('modelos/modelclasificacion.pkl', 'rb') as file:
-    model1 = pickle.load(file)
-# Verifica que los modelos se hayan cargado correctamente antes de pasarlos a las funciones
-
+# Cargar el archivo combinado (usado para las visualizaciones)
 df = pd.read_csv("modelos/archivo_combinado.csv")
 
 # Función para limpiar el estado cuando se cambia de tab
@@ -96,11 +81,6 @@ def limpiar_estado_tab_actual(tab_seleccionado):
 with tab1:
     limpiar_estado_tab_actual("Visualización EDA")  # Limpiar las otras pestañas al entrar a esta
     C_visualizacion(df)
-    '''
-    # URLs de los modelos en Google Drive
-    url_modelprediccion = "https://drive.google.com/file/d/1HcdA69bo2Px8VB6divzKa_SVhqS-2mzn"
-    url_modelclasificacion = "https://drive.google.com/file/d/1BJAa4C4L_DLKorh3xOxGUL31c6J210Dd"
-    '''
 
 # Contenido de la pestaña 2: Modelo de Predicción
 with tab2:
