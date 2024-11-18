@@ -83,8 +83,18 @@ with open('modelos/modelclasificacion.pkl', 'rb') as file:
 
 df = pd.read_csv("modelos/archivo_combinado.csv")
 
+# Función para limpiar el estado cuando se cambia de tab
+def limpiar_estado_tab_actual(tab_seleccionado):
+    if tab_seleccionado != "Visualización EDA" and 'input_data_eda' in st.session_state:
+        del st.session_state['input_data_eda']
+    if tab_seleccionado != "Modelo de Predicción" and 'input_data_prediccion' in st.session_state:
+        del st.session_state['input_data_prediccion']
+    if tab_seleccionado != "Modelo de Clasificación" and 'input_data_clasificacion' in st.session_state:
+        del st.session_state['input_data_clasificacion']
+
 # Contenido de la pestaña 1: Visualización EDA
 with tab1:
+    limpiar_estado_tab_actual("Visualización EDA")  # Limpiar las otras pestañas al entrar a esta
     C_visualizacion(df)
     '''
     # URLs de los modelos en Google Drive
@@ -94,9 +104,10 @@ with tab1:
 
 # Contenido de la pestaña 2: Modelo de Predicción
 with tab2:
+    limpiar_estado_tab_actual("Modelo de Predicción")  # Limpiar las otras pestañas al entrar a esta
     C_prediccion(model2)
 
 # Contenido de la pestaña 3: Modelo de Clasificación
 with tab3:
+    limpiar_estado_tab_actual("Modelo de Clasificación")  # Limpiar las otras pestañas al entrar a esta
     C_clasificacion(model1)
-    
