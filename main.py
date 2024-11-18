@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import seaborn as sns
 import os
+import gdown
 import requests
 from sklearn.preprocessing import MinMaxScaler
 from scipy import interpolate
@@ -40,40 +41,71 @@ st.markdown("<h1 style='font-size: 50px;'>Análisis del Empleado</h1>", unsafe_a
 # Creación de pestañas
 tab1, tab2, tab3 = st.tabs(["Visualización EDA", "Modelo de Predicción", "Modelo de Clasificación"])
 
-# URLs de los modelos en Google Drive (usar enlaces directos con el formato "uc?id=FILE_ID")
+'''
+# URLs de los modelos en Google Drive
 url_modelprediccion = "https://drive.google.com/file/d/1HcdA69bo2Px8VB6divzKa_SVhqS-2mzn"
 url_modelclasificacion = "https://drive.google.com/file/d/1BJAa4C4L_DLKorh3xOxGUL31c6J210Dd"
+'''
+# URLs de los modelos en Google Drive (usando el formato adecuado para gdown)
+url_modelprediccion = "https://drive.google.com/uc?id=1HcdA69bo2Px8VB6divzKa_SVhqS-2mzn"
+url_modelclasificacion = "https://drive.google.com/uc?id=1BJAa4C4L_DLKorh3xOxGUL31c6J210Dd"
+
 
 # Directorio donde se guardarán los modelos
 modelos_dir = "modelos"
-os.makedirs(modelos_dir, exist_ok=True)  # Crear la carpeta si no existe
-
-# Rutas locales de los modelos
-path_modelprediccion = os.path.join(modelos_dir, "modelprediccion.pkl")
-path_modelclasificacion = os.path.join(modelos_dir, "modelclasificacion.pkl")
+os.makedirs(modelos_dir, exist_ok=True)
 
 # Función para descargar un archivo si no existe
 def descargar_modelo(url, path):
     if not os.path.exists(path):
         print(f"Descargando {os.path.basename(path)}...")
-        response = requests.get(url)
-        response.raise_for_status()  # Verificar si hubo errores
-        with open(path, 'wb') as f:
-            f.write(response.content)
-        print(f"Guardado en {path}.")
+        try:
+            # Utilizamos gdown para descargar el archivo
+            gdown.download(url, path, quiet=False)
+            print(f"Archivo descargado y guardado en {path}.")
+        except Exception as e:
+            print(f"Error en la descarga: {e}")
     else:
-        print(f"El archivo {os.path.basename(path)} ya existe en {path}.")
+        print(f"El archivo {os.path.basename(path)} ya existe.")
 
-# Descargar los modelos
-descargar_modelo(url_modelprediccion, path_modelprediccion)
-descargar_modelo(url_modelclasificacion, path_modelclasificacion)
+# Descargar los modelos y asegurar que se complete antes de continuar
 
-# Cargar los modelos con pickle
-with open(path_modelprediccion, "rb") as file1:
+descargar_modelo(url_modelprediccion, os.path.join(modelos_dir, "modelprediccion.pkl"))
+descargar_modelo(url_modelclasificacion, os.path.join(modelos_dir, "modelclasificacion.pkl"))
+
+# Inicializar los modelos como None
+model2 = None
+model1 = None
+
+'''
+# Cargar los modelos con pickle solo si se descargaron correctamente
+try:
+    with open(os.path.join(modelos_dir, "modelprediccion.pkl"), "rb") as file1:
+        model2 = pickle.load(file1)
+    print("Modelo de predicción cargado exitosamente.")
+except Exception as e:
+    print(f"Error al cargar el modelo de predicción: {e}")
+
+try:
+    with open(os.path.join(modelos_dir, "modelclasificacion.pkl"), "rb") as file:
+        model1 = pickle.load(file)
+    print("Modelo de clasificación cargado exitosamente.")
+except Exception as e:
+    print(f"Error al cargar el modelo de clasificación: {e}")
+
+# Verificar que los modelos están cargados antes de continuar
+if model2 is not None and model1 is not None:
+    print("Modelos cargados exitosamente. Continuando con el procesamiento...")
+else:
+    print("Error: No se pudieron cargar los modelos. El código no continuará.")
+'''
+
+with open('modelos/modelprediccion.pkl', 'rb') as file1:
     model2 = pickle.load(file1)
 
-with open(path_modelclasificacion, "rb") as file:
+with open('modelos/modelclasificacion.pkl', 'rb') as file:
     model1 = pickle.load(file)
+# Verifica que los modelos se hayan cargado correctamente antes de pasarlos a las funciones
 
 df = pd.read_csv("modelos/archivo_combinado.csv")
 
